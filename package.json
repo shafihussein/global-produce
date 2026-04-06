@@ -1,0 +1,27 @@
+{
+  "name": "global-produce",
+  "version": "1.0.0",
+  "description": "This is a mock for a real online grocery store. it is full stack project, has server uses React Vite, client uses https with openSSL and database as file persistance with json. ",
+  "keywords": [
+    "produce",
+    "green",
+    "fruits",
+    "veggies",
+    "mock"
+  ],
+  "homepage": "https://github.com/shafihussein/global-produce#readme",
+  "bugs": {
+    "url": "https://github.com/shafihussein/global-produce/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/shafihussein/global-produce.git"
+  },
+  "license": "MIT",
+  "author": "shafihussein",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "seperate tests for server and client and integration test in root"
+  }
+}
