@@ -9,6 +9,11 @@
     "veggies",
     "mock"
   ],
+  "workspaces": [
+    "client",
+    "server",
+    "database"
+  ],
   "homepage": "https://github.com/shafihussein/global-produce#readme",
   "bugs": {
     "url": "https://github.com/shafihussein/global-produce/issues"
@@ -23,5 +28,8 @@
   "main": "index.js",
   "scripts": {
     "test": "seperate tests for server and client and integration test in root"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }

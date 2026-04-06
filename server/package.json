@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This is server repository. ",
+  "keywords": [
+    "null"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "license": "MIT",
+  "author": "shafihuusein",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "config later"
+  }
+}

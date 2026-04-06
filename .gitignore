@@ -1,0 +1,44 @@
+# --- Dependencies ---
+# Ignores all node_modules in root, client, server, and database
+node_modules/
+.npm/
+
+# --- Environment & Secrets ---
+# Protects your API keys and secrets
+.env
+.env.local
+.env.*.local
+
+# --- IDE & Editor ---
+# As requested: ignores VS Code settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --- Build Outputs ---
+# Ignores Vite/React build artifacts
+dist/
+dist-ssr/
+*.local
+
+# --- HTTPS & Security ---
+# Protects your OpenSSL certificates and keys
+*.key
+*.cert
+*.pem
+*.p12
+
+# --- Database / Persistence ---
+# If you want to keep your "source of truth" clean of temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db

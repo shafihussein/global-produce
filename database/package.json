@@ -1,0 +1,19 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "this will act as the database for the project instead of actuall DATABASE like Postgresql",
+  "keywords": [
+    "null"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "license": "MIT",
+  "author": "shafihhussein",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "null"
+  }
+}
