@@ -8,6 +8,8 @@ node_modules/
 .env
 .env.local
 .env.*.local
+#personal config file
+.shafihussein/
 
 # --- IDE & Editor ---
 # As requested: ignores VS Code settings
