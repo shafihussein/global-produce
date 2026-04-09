@@ -27,6 +27,18 @@ dist/
 dist-ssr/
 *.local
 
+# --- Test Files ---
+# Do not track test or story files in this repository
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
+*.stories.js
+*.stories.ts
+*.stories.tsx
+
 # --- HTTPS & Security ---
 # Protects your OpenSSL certificates and keys
 *.key
