@@ -13,14 +13,14 @@ import {
   setUserAddress,
   getUserIsActive,
   setUserIsActive,
-} from "./User";
-import { appendJsonRecord, readJsonArrayFile } from "../utils/fileStore";
-import { ensureEmailIsUnique } from "../utils/userMapper";
+} from "./User.ts";
+import { appendJsonRecord, readJsonArrayFile } from "../utils/fileStore.ts";
+import { ensureEmailIsUnique } from "../utils/userMapper.ts";
 import {
   consumeAdminActivationToken,
   isAdminActivationTokenValid,
-} from "../services/adminActivationTokenService";
-import type { Admin as AdminType } from "../types/schemas";
+} from "../services/adminActivationTokenService.ts";
+import type { Admin as AdminType } from "../types/schemas.ts";
 
 const MODEL_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const ADMINS_FILE_PATH = path.resolve(

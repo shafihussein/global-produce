@@ -13,10 +13,10 @@ import {
   setUserAddress,
   getUserIsActive,
   setUserIsActive,
-} from "./User";
-import { appendJsonRecord, readJsonArrayFile } from "../utils/fileStore";
-import { ensureEmailIsUnique } from "../utils/userMapper";
-import type { Customer as CustomerType, OrdersContainer } from "../types/schemas";
+} from "./User.ts";
+import { appendJsonRecord, readJsonArrayFile } from "../utils/fileStore.ts";
+import { ensureEmailIsUnique } from "../utils/userMapper.ts";
+import type { Customer as CustomerType, OrdersContainer } from "../types/schemas.ts";
 
 const MODEL_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const CUSTOMERS_FILE_PATH = path.resolve(

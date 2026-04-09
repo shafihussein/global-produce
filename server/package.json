@@ -29,8 +29,12 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20.10.6",
-    "typescript": "^5.3.3",
-    "tsx": "^4.7.0"
+    "@types/jest": "^25.2.3",
+    "@types/node": "^20.19.39",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
   }
 }

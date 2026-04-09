@@ -28,7 +28,7 @@ dist-ssr/
 *.local
 
 # --- Test Files ---
-# Do not track any Jest or Storybook test files
+# Do not track test or story files in this repository
 *.test.js
 *.test.ts
 *.test.tsx

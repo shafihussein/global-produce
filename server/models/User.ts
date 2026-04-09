@@ -2,7 +2,7 @@ import {
   validateDateOfBirth,
   validateEmail,
   validateNonEmptyString,
-} from "../utils/validators";
+} from "../utils/validators.ts";
 import {
   assertGeneratedIdIsImmutable,
   buildUserData,
@@ -11,8 +11,8 @@ import {
   normalizeUserAddress,
   normalizeUserPhoneNumber,
   validateIsActive,
-} from "../utils/userModelUtils";
-import type { User as UserType, Address } from "../types/schemas";
+} from "../utils/userModelUtils.ts";
+import type { User as UserType, Address } from "../types/schemas.ts";
 
 /**
  * User class represents the base user entity.
