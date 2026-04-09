@@ -1,31 +1,33 @@
-import { v7 as uuidv7 } from "uuid";
-import { mapUserInput } from "../utils/userMapper.js";
 import {
-  normalizePhoneNumber,
-  validateAddress,
   validateDateOfBirth,
   validateEmail,
   validateNonEmptyString,
-  validateSecurityQuestions,
 } from "../utils/validators.js";
+import {
+  assertGeneratedIdIsImmutable,
+  buildUserData,
+  ensureProfilePicDirectory,
+  hashPassword,
+  normalizeUserAddress,
+  normalizeUserPhoneNumber,
+  validateIsActive,
+} from "../utils/userModelUtils.js";
 
 export class User {
   constructor(userPayload) {
-    const normalized = mapUserInput(userPayload);
+    const userData = buildUserData(userPayload);
 
     // Core user profile fields from the design object.
-    this.id = userPayload?.id || uuidv7();
-    this.fullName = normalized.fullName;
-    this.phoneNumber = normalized.phoneNumber;
-    this.email = normalized.email;
-    this.password = normalized.password;
-    this.dateOfBirth = normalized.dateOfBirth;
-    this.profilePic = normalized.profilePic;
-    this.address = normalized.address;
-    this.orders = normalized.orders;
-    this.securityQuestions = normalized.securityQuestions;
-    this.createdAt = normalized.createdAt;
-    this.isActive = normalized.isActive;
+    this.id = userData.id;
+    this.fullName = userData.fullName;
+    this.phoneNumber = userData.phoneNumber;
+    this.email = userData.email;
+    this.password = userData.password;
+    this.dateOfBirth = userData.dateOfBirth;
+    this.profilePic = userData.profilePic;
+    this.address = userData.address;
+    this.createdAt = userData.createdAt;
+    this.isActive = userData.isActive;
   }
 }
 
@@ -34,8 +36,7 @@ export function getUserId(user) {
 }
 
 export function setUserId(user, id) {
-  user.id = validateNonEmptyString(id, "id");
-  return user.id;
+  assertGeneratedIdIsImmutable();
 }
 
 export function getUserFullName(user) {
@@ -52,7 +53,7 @@ export function getUserPhoneNumber(user) {
 }
 
 export function setUserPhoneNumber(user, phoneNumber) {
-  user.phoneNumber = normalizePhoneNumber(phoneNumber);
+  user.phoneNumber = normalizeUserPhoneNumber(phoneNumber);
   return user.phoneNumber;
 }
 
@@ -70,7 +71,7 @@ export function getUserPassword(user) {
 }
 
 export function setUserPassword(user, password) {
-  user.password = validateNonEmptyString(password, "password");
+  user.password = hashPassword(password);
   return user.password;
 }
 
@@ -97,30 +98,8 @@ export function getUserAddress(user) {
 }
 
 export function setUserAddress(user, address) {
-  user.address = validateAddress(address);
+  user.address = normalizeUserAddress(address);
   return user.address;
-}
-
-export function getUserOrders(user) {
-  return user.orders;
-}
-
-export function setUserOrders(user, orders) {
-  if (!orders || typeof orders !== "object") {
-    throw new Error("orders must be an object");
-  }
-
-  user.orders = orders;
-  return user.orders;
-}
-
-export function getUserSecurityQuestions(user) {
-  return user.securityQuestions;
-}
-
-export function setUserSecurityQuestions(user, securityQuestions) {
-  user.securityQuestions = validateSecurityQuestions(securityQuestions);
-  return user.securityQuestions;
 }
 
 export function getUserCreatedAt(user) {
@@ -137,14 +116,14 @@ export function getUserIsActive(user) {
 }
 
 export function setUserIsActive(user, isActive) {
-  if (typeof isActive !== "boolean") {
-    throw new Error("isActive must be boolean");
-  }
-
-  user.isActive = isActive;
+  user.isActive = validateIsActive(isActive);
   return user.isActive;
 }
 
 export default function createUser(userPayload) {
-  return new User(userPayload);
+  const user = new User(userPayload);
+  user.profilePic = ensureProfilePicDirectory(user.id);
+  user.password = hashPassword(user.password);
+
+  return user;
 }
