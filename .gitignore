@@ -38,8 +38,6 @@ dist-ssr/
 *.stories.js
 *.stories.ts
 *.stories.tsx
-jest.config.js
-jest.config.ts
 
 # --- HTTPS & Security ---
 # Protects your OpenSSL certificates and keys
