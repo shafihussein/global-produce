@@ -1,5 +1,5 @@
-import { parsePhoneNumberFromString } from "libphonenumber-js";
-import type { Address, SecurityQuestion } from "../types/schemas";
+import parsePhoneNumber from "libphonenumber-js";
+import type { Address, SecurityQuestion } from "../types/schemas.ts";
 
 /**
  * Validates and returns a non-empty trimmed string.
@@ -47,7 +47,19 @@ export function normalizePhoneNumber(
   defaultCountry: string = "US",
 ): string {
   const rawPhone = validateNonEmptyString(phoneNumber, "phoneNumber");
-  const parsed = parsePhoneNumberFromString(rawPhone, defaultCountry as any);
+  let parsed;
+
+  try {
+    parsed = rawPhone.trim().startsWith("+")
+      ? parsePhoneNumber(rawPhone)
+      : parsePhoneNumber(rawPhone, defaultCountry as any);
+  } catch {
+    const digitsOnly = rawPhone.replace(/\D/g, "");
+    if (digitsOnly.length >= 10 && digitsOnly.length <= 15) {
+      return `+${digitsOnly}`;
+    }
+    throw new Error("phoneNumber must be valid");
+  }
 
   if (!parsed || !parsed.isValid()) {
     throw new Error("phoneNumber must be valid");

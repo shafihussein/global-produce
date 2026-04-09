@@ -5,8 +5,8 @@ import {
   validateEmail,
   validateNonEmptyString,
   validateSecurityQuestions,
-} from "./validators";
-import type { OrdersContainer } from "../types/schemas";
+} from "./validators.ts";
+import type { OrdersContainer } from "../types/schemas.ts";
 
 /**
  * Creates default orders container with empty arrays for each status.

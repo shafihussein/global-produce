@@ -9,8 +9,8 @@ import {
   validateDateOfBirth,
   validateEmail,
   validateNonEmptyString,
-} from "./validators";
-import type { User, Address } from "../types/schemas";
+} from "./validators.ts";
+import type { User, Address } from "../types/schemas.ts";
 
 const UTILS_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const USERS_DIRECTORY = path.resolve(UTILS_DIRECTORY, "../../database/users");
