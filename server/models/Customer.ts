@@ -1,6 +1,3 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { v7 as uuidv7 } from "uuid";
 import {
   User,
   getUserEmail,
@@ -14,19 +11,12 @@ import {
   getUserIsActive,
   setUserIsActive,
 } from "./User.ts";
-import { appendJsonRecord, readJsonArrayFile } from "../utils/fileStore.ts";
-import { ensureEmailIsUnique } from "../utils/userMapper.ts";
-import type { Customer as CustomerType, OrdersContainer } from "../types/schemas.ts";
-
-const MODEL_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
-const CUSTOMERS_FILE_PATH = path.resolve(
-  MODEL_DIRECTORY,
-  "../../database/users/Customers.ts",
-);
-const ADMINS_FILE_PATH = path.resolve(
-  MODEL_DIRECTORY,
-  "../../database/users/Admins.ts",
-);
+import { ensureUniqueUserEmail } from "../services/userUniquenessService.ts";
+import { saveCustomerRecord } from "../services/userPersistenceService.ts";
+import type {
+  Customer as CustomerType,
+  OrdersContainer,
+} from "../types/schemas.ts";
 
 /**
  * Customer class extends User with order management.
@@ -74,7 +64,9 @@ export function getCustomerEmail(customer: Customer): string {
   return getUserEmail(customer);
 }
 
-export function getCustomerAddress(customer: Customer): ReturnType<typeof getUserAddress> {
+export function getCustomerAddress(
+  customer: Customer,
+): ReturnType<typeof getUserAddress> {
   return getUserAddress(customer);
 }
 
@@ -94,11 +86,17 @@ export function setCustomerId(_customer: Customer, _id: unknown): never {
   throw new Error("Customer ID is immutable");
 }
 
-export function setCustomerFullName(customer: Customer, fullName: unknown): string {
+export function setCustomerFullName(
+  customer: Customer,
+  fullName: unknown,
+): string {
   return setUserFullName(customer, fullName);
 }
 
-export function setCustomerPhoneNumber(customer: Customer, phoneNumber: unknown): string {
+export function setCustomerPhoneNumber(
+  customer: Customer,
+  phoneNumber: unknown,
+): string {
   return setUserPhoneNumber(customer, phoneNumber);
 }
 
@@ -106,11 +104,17 @@ export function setCustomerEmail(customer: Customer, email: unknown): string {
   return setUserEmail(customer, email);
 }
 
-export function setCustomerAddress(customer: Customer, address: unknown): ReturnType<typeof setUserAddress> {
+export function setCustomerAddress(
+  customer: Customer,
+  address: unknown,
+): ReturnType<typeof setUserAddress> {
   return setUserAddress(customer, address);
 }
 
-export function setCustomerOrders(customer: Customer, orders: unknown): OrdersContainer {
+export function setCustomerOrders(
+  customer: Customer,
+  orders: unknown,
+): OrdersContainer {
   if (!orders || typeof orders !== "object") {
     throw new Error("orders must be an object");
   }
@@ -119,7 +123,10 @@ export function setCustomerOrders(customer: Customer, orders: unknown): OrdersCo
   return customer.orders;
 }
 
-export function setCustomerIsActive(customer: Customer, isActive: unknown): boolean {
+export function setCustomerIsActive(
+  customer: Customer,
+  isActive: unknown,
+): boolean {
   return setUserIsActive(customer, isActive);
 }
 
@@ -129,9 +136,9 @@ export function setCustomerIsActive(customer: Customer, isActive: unknown): bool
 
 /**
  * Creates a new Customer instance with persistence:
- * 1. Validates email is unique across Customers and Admins
+ * 1. Validates email is globally unique across persisted users
  * 2. Initializes Customer class with builder pattern
- * 3. Persists to database/users/Customers.ts JSON array
+ * 3. Persists to database/users/Customers/<id>.ts
  *
  * @param customerPayload - Raw customer data (email, name, phone, etc.)
  * @returns Fully initialized and persisted Customer instance
@@ -139,17 +146,8 @@ export function setCustomerIsActive(customer: Customer, isActive: unknown): bool
 export default function createCustomer(
   customerPayload: Record<string, unknown>,
 ): Customer {
-  const allCustomers = readJsonArrayFile<Customer>(CUSTOMERS_FILE_PATH) as any;
-  const allAdmins = readJsonArrayFile(ADMINS_FILE_PATH) as any;
-
-  // Enforce unique email across both customer and admin collections
-  ensureEmailIsUnique(customerPayload?.email, allCustomers, allAdmins);
-
-  const customer = new Customer({
-    ...customerPayload,
-    id: customerPayload?.id || uuidv7(),
-  });
-
-  appendJsonRecord(CUSTOMERS_FILE_PATH, customer as any);
+  ensureUniqueUserEmail(customerPayload?.email);
+  const customer = new Customer(customerPayload);
+  saveCustomerRecord(customer);
   return customer;
 }
