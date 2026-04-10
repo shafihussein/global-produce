@@ -15,7 +15,9 @@ export function ensureDirectoryForFile(filePath: string): void {
  * Returns empty array if file missing, empty, or invalid JSON.
  * Throws if file contains non-array JSON.
  */
-export function readJsonArrayFile<T = Record<string, unknown>>(filePath: string): T[] {
+export function readJsonArrayFile<T = Record<string, unknown>>(
+  filePath: string,
+): T[] {
   if (!fs.existsSync(filePath)) {
     return [];
   }
@@ -38,7 +40,10 @@ export function readJsonArrayFile<T = Record<string, unknown>>(filePath: string)
  * Ensures parent directory exists first.
  * Throws if records is not an array.
  */
-export function writeJsonArrayFile<T extends Record<string, unknown>>(filePath: string, records: T[]): void {
+export function writeJsonArrayFile<T extends Record<string, unknown>>(
+  filePath: string,
+  records: T[],
+): void {
   if (!Array.isArray(records)) {
     throw new Error("records must be an array");
   }
@@ -61,6 +66,60 @@ export function appendJsonRecord<T extends Record<string, unknown>>(
   currentRecords.push(record);
   writeJsonArrayFile(filePath, currentRecords);
   return record;
+}
+
+/**
+ * Reads a JSON object file safely.
+ * Returns null if file missing or empty.
+ * Throws if JSON is invalid or not an object.
+ */
+export function readJsonObjectFile<T = Record<string, unknown>>(
+  filePath: string,
+): T | null {
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+
+  const content = fs.readFileSync(filePath, "utf8").trim();
+  if (!content) {
+    return null;
+  }
+
+  const parsed: unknown = JSON.parse(content);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`Expected object JSON in ${filePath}`);
+  }
+
+  return parsed as T;
+}
+
+/**
+ * Writes a single record as pretty JSON (2-space indent).
+ * Ensures parent directory exists first.
+ */
+export function writeJsonObjectFile<T extends Record<string, unknown>>(
+  filePath: string,
+  record: T,
+): void {
+  ensureDirectoryForFile(filePath);
+  const serialized = JSON.stringify(record, null, 2);
+  fs.writeFileSync(filePath, serialized, "utf8");
+}
+
+/**
+ * Lists file names in a directory.
+ * Returns empty array when directory does not exist.
+ */
+export function listDirectoryFiles(directoryPath: string): string[] {
+  if (!fs.existsSync(directoryPath)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(directoryPath)
+    .filter((childName) =>
+      fs.statSync(path.resolve(directoryPath, childName)).isFile(),
+    );
 }
 
 /**
