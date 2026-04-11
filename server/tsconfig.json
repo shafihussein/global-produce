@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "outDir": "./dist",
     "rootDir": ".",
     "baseUrl": ".",
@@ -8,16 +9,10 @@
       "@server/*": ["./*"]
     },
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }
