@@ -1,0 +1,72 @@
+name: Auto PR
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create-and-merge-pr:
+    if: github.ref_name != 'main' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Set branch variables
+        run: |
+          echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          echo "PR_TITLE=Auto PR: ${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Create or update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_BODY=$(cat <<PRBODY
+Automated pull request for branch `$BRANCH_NAME`.
+
+This PR was created by `.github/workflows/PR.yaml`.
+If `main` conflicts with the branch, the branch version is kept before merge.
+PRBODY
+)
+
+          if gh pr view "$BRANCH_NAME" --json number >/dev/null 2>&1; then
+            gh pr edit "$BRANCH_NAME" --title "$PR_TITLE" --body "$PR_BODY"
+          else
+            gh pr create --base main --head "$BRANCH_NAME" --title "$PR_TITLE" --body "$PR_BODY"
+          fi
+
+      - name: Update branch with latest main using branch-preferred conflict resolution
+        run: |
+          git fetch origin main "$BRANCH_NAME"
+          git checkout "$BRANCH_NAME"
+          BEFORE_SHA=$(git rev-parse HEAD)
+          git merge origin/main -X ours --no-edit
+          AFTER_SHA=$(git rev-parse HEAD)
+
+          if [ "$BEFORE_SHA" != "$AFTER_SHA" ]; then
+            git push origin "HEAD:$BRANCH_NAME"
+          fi
+
+      - name: Merge pull request into main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge "$BRANCH_NAME" --merge --delete-branch
