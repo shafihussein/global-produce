@@ -10,6 +10,15 @@ Source files merged here:
 - `agentic_rules/constraints.md` (empty at merge time)
 - `agentic_rules/standards.md` (empty at merge time)
 
+## Agent Permissions Policy
+
+- For this workspace, agents are authorized to run commands and scripts that read, write, create, move, rename, or delete files inside the repository.
+- Destructive workspace commands are allowed when they are directly related to the requested task, including `rm`, `mv`, `cp`, directory cleanup, file replacement, and similar repo-local filesystem operations.
+- Agents may run project tooling without asking for permission for this repository, including `git`, `gh`, `npm`, `npx`, `node`, test runners, build commands, lint commands, formatting commands, and repo-local scripts.
+- Agents may create branches, commit, pull, push, inspect or update pull requests, inspect or rerun GitHub Actions, and perform related GitHub operations for the repository `shafihussein/global-produce` without asking for permission.
+- Agents should assume the user has pre-approved normal coding and repository maintenance commands for this workspace.
+- Agents must still avoid unrelated destructive actions and must keep command scope limited to the active task.
+
 ## Project Context
 
 ### Architecture
