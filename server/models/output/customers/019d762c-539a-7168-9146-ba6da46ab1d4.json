@@ -1,0 +1,25 @@
+{
+  "id": "019d762c-539a-7168-9146-ba6da46ab1d4",
+  "fullName": "Sample Customer",
+  "phoneNumber": "+14155551010",
+  "email": "sample.customer.1775804109711@example.com",
+  "password": "customer-password",
+  "dateOfBirth": "1996-05-10T00:00:00.000Z",
+  "profilePic": "",
+  "address": {
+    "street": "101 Market Street",
+    "city": "San Francisco",
+    "postalCode": "94105",
+    "country": "USA"
+  },
+  "createdAt": "2026-04-10T06:55:09.728Z",
+  "isActive": true,
+  "orders": {
+    "placed": [],
+    "processing": [],
+    "shipped": [],
+    "delivered": [],
+    "cancelled": []
+  },
+  "role": "customer"
+}
